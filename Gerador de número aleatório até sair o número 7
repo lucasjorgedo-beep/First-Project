@@ -1,0 +1,13 @@
+import random
+
+tentativas = 0
+numero_sorteado = 0
+
+print("Gerando números aleatórios até sair o número 7...")
+
+while numero_sorteado != 7:
+  numero_sorteado = random.randint(1, 10)
+  tentativas += 1
+  print(f"Tentativa {tentativas}: O número sorteado foi {numero_sorteado}")
+
+print(f"\nParabéns! O número 7 foi sorteado na tentativa {tentativas}!")
