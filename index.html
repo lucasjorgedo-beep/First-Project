@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hambúrguer Perdido</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <section class="hero-panel">
+        <p class="eyebrow">Aventura pixel art</p>
+        <h1>Hambúrguer Perdido</h1>
+        <p>
+          O Cachorro-Quente do Mal roubou o grandioso hambúrguer do reino.
+          Empunhe sua espátula lendária, atravesse a cozinha encantada e traga
+          o lanche sagrado de volta!
+        </p>
+      </section>
+
+      <section class="hud" aria-label="Estado do jogo">
+        <span>❤️ Vida: <strong id="health">3</strong></span>
+        <span>🍔 Migalhas: <strong id="crumbs">0</strong>/5</span>
+        <span>⚔️ Missão: <strong id="quest">Recupere o hambúrguer</strong></span>
+      </section>
+
+      <canvas id="game" width="768" height="432" aria-label="Jogo Hambúrguer Perdido"></canvas>
+
+      <section class="controls">
+        <h2>Como jogar</h2>
+        <ul>
+          <li>Use <kbd>←</kbd> <kbd>→</kbd> ou <kbd>A</kbd> <kbd>D</kbd> para andar.</li>
+          <li>Use <kbd>Espaço</kbd>, <kbd>↑</kbd> ou <kbd>W</kbd> para pular.</li>
+          <li>Colete 5 migalhas douradas para enfraquecer o vilão.</li>
+          <li>Encoste no hambúrguer grandioso para vencer.</li>
+        </ul>
+        <button id="restart" type="button">Recomeçar aventura</button>
+      </section>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
