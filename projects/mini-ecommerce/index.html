@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Domingues Store — Mini E-commerce</title>
+<style>
+:root{--ink:#14333c;--muted:#617980;--cyan:#16b8c9;--pale:#e8fbfc;--line:#d8e9eb;--bg:#f6fbfb}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif}header{background:white;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:4}.wrap{width:min(1120px,calc(100% - 32px));margin:auto}.bar{height:70px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-weight:900;font-size:1.25rem}.brand span{color:var(--cyan)}button,input,select{font:inherit}.cart-button,.primary{border:0;background:var(--cyan);color:#042c33;padding:11px 16px;border-radius:10px;font-weight:800;cursor:pointer}.hero{padding:42px 0 26px}.hero-box{background:linear-gradient(115deg,#dff9fa,#f2ffff);padding:34px;border-radius:20px}.hero h1{font-size:clamp(2rem,5vw,3.3rem);line-height:1.05;margin:8px 0}.hero p{color:var(--muted);max-width:600px}.tools{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0}.tools input,.tools select{border:1px solid var(--line);border-radius:10px;padding:11px;background:white;min-width:180px}.layout{display:grid;grid-template-columns:1fr 320px;gap:22px;padding-bottom:60px}.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.product,.cart{background:white;border:1px solid var(--line);border-radius:15px;padding:18px}.product .emoji{height:115px;border-radius:12px;background:var(--pale);display:grid;place-items:center;font-size:3rem}.product h3{margin:13px 0 3px}.muted{color:var(--muted);font-size:.9rem}.price{font-size:1.2rem;font-weight:900;margin:10px 0}.product button{width:100%}.cart{height:max-content;position:sticky;top:88px}.cart h2{margin-top:0}.cart-line{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.9rem}.cart-line button{border:0;background:none;color:#b33;cursor:pointer}.total{display:flex;justify-content:space-between;font-weight:900;margin:18px 0}.notice{font-size:.8rem;color:var(--muted);background:#f3f8f8;padding:10px;border-radius:9px}.empty{color:var(--muted);padding:15px 0}@media(max-width:760px){.layout{grid-template-columns:1fr}.cart{position:static;grid-row:1}.products{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:440px){.products{grid-template-columns:1fr}.hero-box{padding:23px}.tools input,.tools select{width:100%}}
+</style></head><body>
+<header><div class="wrap bar"><div class="brand">DOMINGUES<span>.</span> STORE</div><button class="cart-button" onclick="document.getElementById('cart').scrollIntoView({behavior:'smooth'})">Carrinho (<span id="cart-count">0</span>)</button></div></header>
+<main class="wrap"><section class="hero"><div class="hero-box"><small>PROJETO DEMONSTRATIVO</small><h1>Encontre o que<br>você precisa.</h1><p>Vitrine virtual para praticar catálogo, busca, filtros e carrinho. Produtos e preços são ilustrativos.</p></div><div class="tools"><input id="search" type="search" placeholder="Buscar produto..." aria-label="Buscar produto"><select id="category" aria-label="Filtrar categoria"><option value="Todas">Todas as categorias</option><option>Casa</option><option>Esporte</option><option>Eletrônicos</option></select></div></section>
+<div class="layout"><section><h2>Produtos</h2><div class="products" id="products"></div></section><aside class="cart" id="cart"><h2>Seu carrinho</h2><div id="cart-items" class="empty">Seu carrinho está vazio.</div><div class="total"><span>Total</span><span id="total">R$ 0,00</span></div><button class="primary" style="width:100%" onclick="checkout()">Finalizar demonstração</button><p class="notice">Protótipo: não processa pagamentos, não calcula frete real e não envia pedidos. Integrações externas seriam necessárias.</p></aside></div></main>
+<script>
+const catalog=[
+{id:1,name:"Garrafa térmica",category:"Casa",price:49.9,emoji:"🧴",description:"Modelo demonstrativo"},
+{id:2,name:"Luminária de mesa",category:"Casa",price:79.9,emoji:"💡",description:"Iluminação para estudos"},
+{id:3,name:"Bola esportiva",category:"Esporte",price:59.9,emoji:"⚽",description:"Acessório esportivo"},
+{id:4,name:"Mochila",category:"Esporte",price:119.9,emoji:"🎒",description:"Uso diário"},
+{id:5,name:"Fone de ouvido",category:"Eletrônicos",price:89.9,emoji:"🎧",description:"Acessório eletrônico"},
+{id:6,name:"Teclado compacto",category:"Eletrônicos",price:139.9,emoji:"⌨️",description:"Periférico demonstrativo"}];
+const cart=new Map();
+const money=value=>value.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+function renderProducts(){
+ const q=document.getElementById("search").value.toLowerCase(),cat=document.getElementById("category").value;
+ const list=catalog.filter(p=>(cat==="Todas"||p.category===cat)&&(p.name.toLowerCase().includes(q)||p.description.toLowerCase().includes(q)));
+ document.getElementById("products").innerHTML=list.length?list.map(p=>'<article class="product"><div class="emoji">'+p.emoji+'</div><h3>'+p.name+'</h3><div class="muted">'+p.category+' · '+p.description+'</div><div class="price">'+money(p.price)+'</div><button class="primary" onclick="add('+p.id+')">Adicionar ao carrinho</button></article>').join(""):'<p class="muted">Nenhum produto encontrado.</p>';
+}
+function add(id){cart.set(id,(cart.get(id)||0)+1);renderCart();}
+function remove(id){const qty=(cart.get(id)||0)-1;if(qty<=0)cart.delete(id);else cart.set(id,qty);renderCart();}
+function renderCart(){
+ let count=0,total=0;const lines=[];
+ for(const [id,qty] of cart){const p=catalog.find(item=>item.id===id);count+=qty;total+=p.price*qty;lines.push('<div class="cart-line"><span>'+p.name+' × '+qty+'<br><b>'+money(p.price*qty)+'</b></span><button aria-label="Remover uma unidade de '+p.name+'" onclick="remove('+id+')">Remover</button></div>');}
+ document.getElementById("cart-count").textContent=count;document.getElementById("cart-items").innerHTML=lines.length?lines.join(""):'<div class="empty">Seu carrinho está vazio.</div>';document.getElementById("total").textContent=money(total);
+}
+function checkout(){if(!cart.size){alert("Adicione um produto antes de continuar.");return;}alert("Demonstração concluída! Nenhuma compra real foi realizada.");}
+document.getElementById("search").addEventListener("input",renderProducts);document.getElementById("category").addEventListener("change",renderProducts);renderProducts();renderCart();
+</script></body></html>
